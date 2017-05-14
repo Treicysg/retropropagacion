@@ -1,3 +1,4 @@
+workspace()
 type RedNeuronal
     inputSize::Int64
     hiddenLayerSize::Int64
@@ -28,9 +29,10 @@ function main()
   println()
   println()
   println()
-  X = Int64[3 5; 5 1; 10 2]
+  #Se prueba con el valor de 1
+  X = Int64[0 0 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 1 1 1 1 0 0]
 
-  red = RedNeuronal(2, 3, 1)
+  red = RedNeuronal(64, 30, 10)
 
   w1 = rand(red.inputSize, red.hiddenLayerSize)
   w2 = rand(red.hiddenLayerSize, red.outputSize)
@@ -38,5 +40,6 @@ function main()
   result = forward(X, w1, w2)
   println(result)
 end
+
 
 main()
