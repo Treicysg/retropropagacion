@@ -5,79 +5,73 @@ type RedNeuronal
     outputSize::Int64
 end
 
-function readFile()
-  input = open("C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/input.txt")
-  s = readstring(input)
-  print(s)
-  close(input)
-end
 
 function forward(X, w1, w2)
- #propaga los inputs en la readFile
- global z2 = *(X, w1)
- global a2 = sigmoid(z2)
- global z3 = *(a2, w2)
- yHat = sigmoid(z3)
- return yHat
+ #propaga los inputs en la RedNeuronal
+ z2 = *(X, w1)
+ global a2 = sigmoid(z2 + 1)
+ z3 = *(a2, w2)
+ outM = sigmoid(z3 + 1)
+ return outM
 end
 
 function sigmoid(z)
   return 1.0 ./ (1.0 .+ exp(-z))
 end
 
-function sigmoidPrime(z)
-  return exp(-z) ./ ((1.0 .+ exp(-z))^2)
+function backwards(X, Y, w1, w2, outM, eta)
+  error_out = (outM .* (1 .- outM) .* (Y .- outM))
+  global w_upd2 = (w2 .+ eta .* error_out .* a2')
+  error_out2 = (a2 .*(1 .- a2)) .* (*(error_out,w2'))
+  global w_upd1 = (w1 .+ eta .* error_out2 .* X')
 end
 
-function costFunctionPrime(X, Y, w1, w2)
-  yHat = forward(X, w1, w2)
-  pas = -(Y-yHat)
-  println(pas)
-  println(sigmoidPrime(z3))
-  println()
-  delta3 = (pas) .* sigmoidPrime(z3)
-  dJdW2 = *(a2', delta3)
-
-  delta2 = *(*(delta3, w2'), sigmoidPrime(z2))
-  dJdW1 = *(X', delta2)
-  return dJdW1, dJdW2
-end
-
-function costFunction(Y, yHat)
-  result = 0
-  for i in Y
-    for j in yHat
-      result += 0.5*(i-j)^2
+function processSolution(outM)
+  processedOut = []
+  for i in outM
+    if i <= 0.5
+      push!(processedOut,0)
+    else
+      push!(processedOut,1)
     end
   end
-  return result
+  return processedOut
 end
+
+function train(input, output, eta, oculta, error, max_iter)
+
+  bias_node = 1
+
+  red = RedNeuronal(64, oculta, 10)
+  w1 = rand(-3:3,red.inputSize, red.hiddenLayerSize)
+  w2 = rand(-3:3,red.hiddenLayerSize, red.outputSize)
+
+  X = Int64[0 0 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 1 1 1 1 0 0]
+  Y =[1 0 0 0 0 0 0 0 0 0]
+
+  i = 0
+  outM= []
+  while i < max_iter
+
+    outM = forward(X, w1, w2)
+    backwards(X, Y, w1, w2, outM, eta)
+    w1 = w_upd1
+    w2 = w_upd2
+
+    i += 1
+  end
+  result = processSolution(outM)
+  println(result)
+end
+
+
 
 function main()
   println()
   println()
   println()
-  #Se prueba con el valor de 1
-  X = Int64[0 0 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 1 1 1 1 0 0]
-  #resultado deseado
-  Y =[1 0 0 0 0 0 0 0 0 0]
 
-  red = RedNeuronal(64, 30, 10)
-
-  w1 = rand(red.inputSize, red.hiddenLayerSize)
-
-  w2 = rand(red.hiddenLayerSize, red.outputSize)
-
-  result = forward(X, w1, w2)
-  error = costFunction(Y, result)
-  #println(error)
-println(w2)
-  println(sigmoidPrime(w2))
-  dJdW1, dJdW2 = costFunctionPrime(X, Y, w1, w2)
-
-  println(dJdW1)
-  println()
-  println(dJdW2)
+  train("archivo.txt", "archivo.txt", 0.5, 30, 20, 500000)
 end
 
 
