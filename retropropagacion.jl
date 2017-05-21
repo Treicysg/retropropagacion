@@ -6,10 +6,24 @@ type RedNeuronal
 end
 
 function readFile()
-  input = open("C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/input.txt")
-  s = readstring(input)
-  print(s)
+  #input is the name of the input file
+  #input = open("C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/input.txt")
+  input = open("C:/Users/Treicy/Documents/IA/Proyecto 3/input.txt")
+  #X = Array{Int64, 2}()
+  X = Int64[]
+  while !eof(input)
+    c = read(input, Char)
+    if Int(c) == 49
+      append!(X,1)
+    elseif Int(c) ==48
+      append!(X,0)
+    end
+
+  end
+  R = reshape(X,1,64)
   close(input)
+  return R
+
 end
 
 function forward(X, w1, w2)
@@ -29,9 +43,11 @@ function main()
   println()
   println()
   println()
+  #readFile()
   #Se prueba con el valor de 1
-  X = Int64[0 0 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 1 1 1 1 0 0]
-
+  #X = Int64[0 0 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 1 1 1 1 0 0]
+  #readFile()
+  X = readFile()
   red = RedNeuronal(64, 30, 10)
 
   w1 = rand(red.inputSize, red.hiddenLayerSize)
