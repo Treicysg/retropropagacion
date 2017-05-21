@@ -32,24 +32,24 @@ function readFile()
       current_line_nmb = 0
       #Clean X and Y
       X = reshape(X,1,64)
-      println()
-      print("*******Values of X:*********")
-      print(X)
+      #println()
+      #print("*******Values of X:*********")
+      #print(X)
       Y = reshape(Y,1,10)
-      println()
-      print("*********Values of Y:*******")
-      print(Y)
+      #println()
+      #print("*********Values of Y:*******")
+      #print(Y)
       digit_rep[1] = X
       digit_rep[2] = Y
-      println()
-      print("********Digit:***************")
-      print(digit_rep)
-      print("DB INDEX: ")
-      print(db_index)
+      #println()
+      #print("********Digit:***************")
+      #print(digit_rep)
+      #print("DB INDEX: ")
+      #print(db_index)
 
       database[db_index] = digit_rep
       db_index+=1
-      println()
+      #println()
       X = Int64[]
       Y = Int64[]
       digit_rep = Array{Any}(2)
@@ -71,28 +71,12 @@ function readFile()
 
   end
   print("*********DATABASE*************")
+  println()
   print(database)
-
-  # while !eof(input)
-  #   c = read(input, Char)
-  #   ##
-  #   if lines == 9
-  #   end
-  #   if c == 10
-  #     lines+=1
-  #   end
-  #   if Int(c) == 49
-  #     append!(X,1)
-  #   elseif Int(c) ==48
-  #     append!(X,0)
-  #   end
-  #
-  # end
-  #println("Number of lines: ")
-  #println(numbLines)
-  #R = reshape(X,1,64)
+  #database = reshape(database,1,10)
   close(input)
-  #return R
+  #************uncomment the following line **************
+  #return database
 
 end
 
