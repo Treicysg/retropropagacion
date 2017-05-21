@@ -12,6 +12,9 @@ function readFile()
 
   Y = Int64[]
   X = Int64[]
+  db_index = 1
+  digit_rep = Array{Any}(2)
+  database = Array{Any}(10)
   current_line_nmb = 0
 
   for line in readlines(input)
@@ -29,15 +32,27 @@ function readFile()
       current_line_nmb = 0
       #Clean X and Y
       X = reshape(X,1,64)
-      print("Values of X:")
-      print(X)
       println()
+      print("*******Values of X:*********")
+      print(X)
       Y = reshape(Y,1,10)
-      print("Values of Y:")
+      println()
+      print("*********Values of Y:*******")
       print(Y)
+      digit_rep[1] = X
+      digit_rep[2] = Y
+      println()
+      print("********Digit:***************")
+      print(digit_rep)
+      print("DB INDEX: ")
+      print(db_index)
+
+      database[db_index] = digit_rep
+      db_index+=1
       println()
       X = Int64[]
       Y = Int64[]
+      digit_rep = Array{Any}(2)
     else
       for c in line
         if Int(c) == 49
@@ -53,7 +68,10 @@ function readFile()
 
 
 
+
   end
+  print("*********DATABASE*************")
+  print(database)
 
   # while !eof(input)
   #   c = read(input, Char)
