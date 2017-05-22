@@ -5,6 +5,80 @@ type RedNeuronal
     outputSize::Int64
 end
 
+function readFile()
+  #input is the name of the input file
+  input = open("C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/input.txt")
+  #input = open("C:/Users/Treicy/Documents/IA/Proyecto 3/input.txt")
+
+  Y = Int64[]
+  X = Int64[]
+  db_index = 1
+  digit_rep = Array{Any}(2)
+  database = Array{Any}(10)
+  current_line_nmb = 0
+
+  for line in readlines(input)
+    current_line_nmb+=1
+    #make sure it is not data from the next digit
+    if current_line_nmb == 9
+
+      for c in line
+        if Int(c) == 49
+            append!(Y,1)
+        elseif Int(c) ==48
+            append!(Y,0)
+        end
+      end
+      current_line_nmb = 0
+      #Clean X and Y
+      X = reshape(X,1,64)
+      #println()
+      #print("*******Values of X:*********")
+      #print(X)
+      Y = reshape(Y,1,10)
+      #println()
+      #print("*********Values of Y:*******")
+      #print(Y)
+      digit_rep[1] = X
+      digit_rep[2] = Y
+      #println()
+      #print("********Digit:***************")
+      #print(digit_rep)
+      #print("DB INDEX: ")
+      #print(db_index)
+
+      database[db_index] = digit_rep
+      db_index+=1
+      #println()
+      X = Int64[]
+      Y = Int64[]
+      digit_rep = Array{Any}(2)
+    else
+      for c in line
+        if Int(c) == 49
+            append!(X,1)
+        elseif Int(c) ==48
+            append!(X,0)
+        end
+      end
+
+
+    end
+
+
+
+
+
+  end
+  #println("*********DATABASE*************")
+  #println()
+  #print(database)
+  #database = reshape(database,1,10)
+  close(input)
+  #************uncomment the following line **************
+  return database
+
+end
 
 function forward(X, w1, w2)
  #propaga los inputs en la RedNeuronal
@@ -27,7 +101,7 @@ function backwards(X, Y, w1, w2, outM, eta)
 end
 
 function processSolution(outM)
-  processedOut = []
+  processedOut = Int64[]
   for i in outM
     if i <= 0.5
       push!(processedOut,0)
@@ -46,22 +120,38 @@ function train(input, output, eta, oculta, error, max_iter)
   w1 = rand(-3:3,red.inputSize, red.hiddenLayerSize)
   w2 = rand(-3:3,red.hiddenLayerSize, red.outputSize)
 
-  X = Int64[0 0 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 1 1 1 1 0 0]
-  Y =[1 0 0 0 0 0 0 0 0 0]
+  database = readFile()
+  for data in database
+    number = data
+    X = number[1]
+    Y = number[2]
 
-  i = 0
-  outM= []
-  while i < max_iter
+    i = 0
+    outM= []
+    while i < max_iter
 
-    outM = forward(X, w1, w2)
-    backwards(X, Y, w1, w2, outM, eta)
-    w1 = w_upd1
-    w2 = w_upd2
+      outM = forward(X, w1, w2)
+      backwards(X, Y, w1, w2, outM, eta)
+      w1 = w_upd1
+      w2 = w_upd2
+      i += 1
+    end
+    result = processSolution(outM)
 
-    i += 1
+    open("C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/output.txt", "a") do f
+          n1, n2, n3, n4, n5, n6, n7, n8, n9, n0 = result
+          write(f, "[$n1 $n2 $n3 $n4 $n5 $n6 $n7 $n8 $n9 $n0]\n")
+          #writedlm(f, result)
+      end
+
+
+    println(result)
   end
-  result = processSolution(outM)
-  println(result)
+
+  # X = Int64[0 0 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 1 1 1 1 0 0]
+  # Y =[1 0 0 0 0 0 0 0 0 0]
+
+
 end
 
 
@@ -70,8 +160,26 @@ function main()
   println()
   println()
   println()
+  #database = readFile()
+  train("archivo.txt", "C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/output.txt", 0.5, 30, 20, 500000)
 
-  train("archivo.txt", "archivo.txt", 0.5, 30, 20, 500000)
+  # for i in database
+  #   number = i
+  #   #println(number)
+  #   X = number[1]
+  #   Y = number[2]
+  #   println("-------------X-------------------")
+  #   println(X)
+  #   println("-------------Y--------------------")
+  #   println(Y)
+  #   println()
+  #   println()
+  # end
+
+  println()
+  println()
+  println()
+  #readFile()
 end
 
 
