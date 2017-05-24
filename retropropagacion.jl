@@ -5,10 +5,11 @@ type RedNeuronal
     outputSize::Int64
 end
 
+
 function readFile()
   #input is the name of the input file
-  input = open("C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/input.txt")
-  #input = open("C:/Users/Treicy/Documents/IA/Proyecto 3/input.txt")
+  #input = open("C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/input.txt")
+  input = open("C:/Users/Treicy/Documents/IA/Proyecto 3/input.txt")
 
   Y = Int64[]
   X = Int64[]
@@ -115,7 +116,8 @@ end
 function train(input, output, eta, oculta, error, max_iter)
 
   bias_node = 1
-
+  test_number = 1
+  passed_tests = 0
   red = RedNeuronal(64, oculta, 10)
   w1 = rand(-3:3,red.inputSize, red.hiddenLayerSize)
   w2 = rand(-3:3,red.hiddenLayerSize, red.outputSize)
@@ -137,20 +139,29 @@ function train(input, output, eta, oculta, error, max_iter)
       i += 1
     end
     result = processSolution(outM)
-
-    open("C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/output.txt", "a") do f
+    #test is called to display values in console
+    print("\n************Prueba ")
+    print(test_number)
+    print("************")
+    passed_tests+=test(result,Y)
+    test_number+=1
+    open("C:/Users/Treicy/Documents/IA/Proyecto 3/output.txt", "a") do f
           n1, n2, n3, n4, n5, n6, n7, n8, n9, n0 = result
           write(f, "[$n1 $n2 $n3 $n4 $n5 $n6 $n7 $n8 $n9 $n0]\n")
           #writedlm(f, result)
       end
 
 
-    println(result)
+    #println(result)
   end
 
   # X = Int64[0 0 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 0 1 1 1 1 0 0]
   # Y =[1 0 0 0 0 0 0 0 0 0]
-
+  println("\n+++++++++Resultado Final+++++++++")
+  print("\nCasos Correctos:")
+  print(passed_tests)
+  print("\nCasos incorrectos:")
+  print(10 - passed_tests)
 
 end
 
@@ -162,7 +173,7 @@ function main()
   println()
   #database = readFile()
   train("archivo.txt", "C:/Users/Denisse/Documents/2017/IA/Tarea3/retropropagacion/output.txt", 0.5, 30, 20, 500000)
-
+  #test()
   # for i in database
   #   number = i
   #   #println(number)
@@ -181,6 +192,27 @@ function main()
   println()
   #readFile()
 end
+function test(red,casos)
+  #red:resultado obtenido
+  #casos:Y:resultado esperado
 
+
+  red = reshape(red,1,10)
+
+
+  print("\nResultado Esperado ---> ")
+  print(casos)
+  print("\nResultado Obtenido ---> ")
+  print(red)
+  if red == casos
+    return 1
+  else
+    return 0
+
+  end
+
+
+
+end
 
 main()
